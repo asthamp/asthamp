@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>call.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #7a7e85;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+call.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'package:permission_handler/permission_handler.dart'</span><span class="s2">;</span>
+
+<span class="s3">class </span><span class="s0">CallScreen </span><span class="s3">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s3">final </span><span class="s0">String patientName</span><span class="s2">;</span>
+
+  <span class="s3">const </span><span class="s0">CallScreen</span><span class="s2">({</span><span class="s3">super</span><span class="s2">.</span><span class="s0">key</span><span class="s2">, </span><span class="s0">required </span><span class="s3">this</span><span class="s2">.</span><span class="s0">patientName</span><span class="s2">, </span><span class="s0">required String roomName</span><span class="s2">});</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">State</span><span class="s2">&lt;</span><span class="s0">CallScreen</span><span class="s2">&gt; </span><span class="s0">createState</span><span class="s2">() =&gt; </span><span class="s0">_CallScreenState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">_CallScreenState </span><span class="s3">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">CallScreen</span><span class="s2">&gt; {</span>
+  <span class="s3">final </span><span class="s0">JitsiMeet jitsiMeet </span><span class="s2">= </span><span class="s0">JitsiMeet</span><span class="s2">();</span>
+  <span class="s0">late String roomName</span><span class="s2">;</span>
+
+  <span class="s0">@override</span>
+  <span class="s3">void </span><span class="s0">initState</span><span class="s2">() {</span>
+    <span class="s3">super</span><span class="s2">.</span><span class="s0">initState</span><span class="s2">();</span>
+    <span class="s0">roomName </span><span class="s2">= </span><span class="s1">&quot;patient_</span><span class="s2">${</span><span class="s0">widget</span><span class="s2">.</span><span class="s0">patientName</span><span class="s2">.</span><span class="s0">replaceAll</span><span class="s2">(</span><span class="s1">' '</span><span class="s2">, </span><span class="s1">'_'</span><span class="s2">)}</span><span class="s1">&quot;</span><span class="s2">;</span>
+    <span class="s0">_startMeeting</span><span class="s2">();</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Future</span><span class="s2">&lt;</span><span class="s3">void</span><span class="s2">&gt; </span><span class="s0">_startMeeting</span><span class="s2">() </span><span class="s0">async </span><span class="s2">{</span>
+    <span class="s0">await </span><span class="s2">[</span>
+      <span class="s0">Permission</span><span class="s2">.</span><span class="s0">camera</span><span class="s2">,</span>
+      <span class="s0">Permission</span><span class="s2">.</span><span class="s0">microphone</span><span class="s2">,</span>
+    <span class="s2">].</span><span class="s0">request</span><span class="s2">();</span>
+
+    <span class="s3">if </span><span class="s2">(!(</span><span class="s0">await Permission</span><span class="s2">.</span><span class="s0">camera</span><span class="s2">.</span><span class="s0">isGranted </span><span class="s2">&amp;&amp; </span><span class="s0">await Permission</span><span class="s2">.</span><span class="s0">microphone</span><span class="s2">.</span><span class="s0">isGranted</span><span class="s2">)) {</span>
+      <span class="s0">ScaffoldMessenger</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">showSnackBar</span><span class="s2">(</span>
+        <span class="s3">const </span><span class="s0">SnackBar</span><span class="s2">(</span><span class="s0">content</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">&quot;Camera &amp; Microphone permissions are required&quot;</span><span class="s2">)),</span>
+      <span class="s2">);</span>
+      <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+      <span class="s3">return</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">final </span><span class="s0">options </span><span class="s2">= </span><span class="s0">JitsiMeetConferenceOptions</span><span class="s2">(</span>
+      <span class="s0">room</span><span class="s2">: </span><span class="s0">roomName</span><span class="s2">,</span>
+      <span class="s0">serverURL</span><span class="s2">: </span><span class="s1">&quot;https://meet.jit.si&quot;</span><span class="s2">,</span>
+      <span class="s0">userInfo</span><span class="s2">: </span><span class="s0">JitsiMeetUserInfo</span><span class="s2">(</span><span class="s0">displayName</span><span class="s2">: </span><span class="s0">widget</span><span class="s2">.</span><span class="s0">patientName</span><span class="s2">),</span>
+      <span class="s0">configOverrides</span><span class="s2">: {</span>
+        <span class="s1">&quot;startWithAudioMuted&quot;</span><span class="s2">: </span><span class="s3">false</span><span class="s2">,</span>
+        <span class="s1">&quot;startWithVideoMuted&quot;</span><span class="s2">: </span><span class="s3">false</span><span class="s2">,</span>
+      <span class="s2">},</span>
+      <span class="s0">featureFlags</span><span class="s2">: {</span>
+        <span class="s1">&quot;welcomepage.enabled&quot;</span><span class="s2">: </span><span class="s3">false</span><span class="s2">,</span>
+      <span class="s2">},</span>
+    <span class="s2">);</span>
+
+    <span class="s0">await jitsiMeet</span><span class="s2">.</span><span class="s0">join</span><span class="s2">(</span><span class="s0">options</span><span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s3">void </span><span class="s0">dispose</span><span class="s2">() {</span>
+    <span class="s4">// No leave() available; handled by internal Jitsi UI</span>
+    <span class="s3">super</span><span class="s2">.</span><span class="s0">dispose</span><span class="s2">();</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+        <span class="s0">title</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Calling </span><span class="s2">${</span><span class="s0">widget</span><span class="s2">.</span><span class="s0">patientName</span><span class="s2">}</span><span class="s1">'</span><span class="s2">),</span>
+        <span class="s0">actions</span><span class="s2">: [</span>
+          <span class="s0">IconButton</span><span class="s2">(</span>
+            <span class="s0">icon</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">call_end</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">red</span><span class="s2">),</span>
+            <span class="s0">onPressed</span><span class="s2">: () {</span>
+              <span class="s4">// Optional: try await jitsiMeet.hangUp(); if it exists</span>
+              <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+            <span class="s2">},</span>
+          <span class="s2">),</span>
+        <span class="s2">],</span>
+      <span class="s2">),</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Center</span><span class="s2">(</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">&quot;Launching video call...&quot;</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">18</span><span class="s2">)),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

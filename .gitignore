@@ -11,12 +11,13 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-
+.env // adding to not show in the github
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
 .idea/
+dotenv.env
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line

@@ -1,0 +1,146 @@
+<html>
+<head>
+<title>archive.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+archive.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+
+<span class="s3">class </span><span class="s0">ArchiveScreen </span><span class="s3">extends </span><span class="s0">StatelessWidget </span><span class="s2">{</span>
+  <span class="s3">const </span><span class="s0">ArchiveScreen</span><span class="s2">({</span><span class="s3">super</span><span class="s2">.</span><span class="s0">key</span><span class="s2">});</span>
+
+  <span class="s3">void </span><span class="s0">_showArchiveConfirmation</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s0">showDialog</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">: </span><span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) {</span>
+        <span class="s3">return </span><span class="s0">Dialog</span><span class="s2">(</span>
+          <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+          <span class="s0">shape</span><span class="s2">: </span><span class="s0">RoundedRectangleBorder</span><span class="s2">(</span>
+            <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s4">12</span><span class="s2">),</span>
+          <span class="s2">),</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s0">Padding</span><span class="s2">(</span>
+            <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">vertical</span><span class="s2">: </span><span class="s4">20</span><span class="s2">, </span><span class="s0">horizontal</span><span class="s2">: </span><span class="s4">24</span><span class="s2">),</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+              <span class="s0">mainAxisSize</span><span class="s2">: </span><span class="s0">MainAxisSize</span><span class="s2">.</span><span class="s0">min</span><span class="s2">,</span>
+              <span class="s0">children</span><span class="s2">: [</span>
+                <span class="s5">// Title</span>
+                <span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span>
+                  <span class="s1">'Patient Archival Confirmation'</span><span class="s2">,</span>
+                  <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+                    <span class="s0">fontWeight</span><span class="s2">: </span><span class="s0">FontWeight</span><span class="s2">.</span><span class="s0">bold</span><span class="s2">,</span>
+                    <span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16</span><span class="s2">,</span>
+                    <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">10</span><span class="s2">),</span>
+
+                <span class="s5">// Message</span>
+                <span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span>
+                  <span class="s1">'Are you sure you want to archive this patient?\nThis will send them to your inactive list.'</span><span class="s2">,</span>
+                  <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+                    <span class="s0">fontSize</span><span class="s2">: </span><span class="s4">14</span><span class="s2">,</span>
+                    <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white70</span><span class="s2">,</span>
+                  <span class="s2">),</span>
+                  <span class="s0">textAlign</span><span class="s2">: </span><span class="s0">TextAlign</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+                <span class="s2">),</span>
+                <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20</span><span class="s2">),</span>
+
+                <span class="s5">// Buttons</span>
+                <span class="s0">Row</span><span class="s2">(</span>
+                  <span class="s0">mainAxisAlignment</span><span class="s2">: </span><span class="s0">MainAxisAlignment</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+                  <span class="s0">children</span><span class="s2">: [</span>
+                    <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                      <span class="s0">onPressed</span><span class="s2">: () {</span>
+                        <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                        <span class="s0">ScaffoldMessenger</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">showSnackBar</span><span class="s2">(</span>
+                          <span class="s3">const </span><span class="s0">SnackBar</span><span class="s2">(</span><span class="s0">content</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Patient archived'</span><span class="s2">)),</span>
+                        <span class="s2">);</span>
+                      <span class="s2">},</span>
+                      <span class="s0">style</span><span class="s2">: </span><span class="s0">ElevatedButton</span><span class="s2">.</span><span class="s0">styleFrom</span><span class="s2">(</span>
+                        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                        <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+                        <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span>
+                            <span class="s0">horizontal</span><span class="s2">: </span><span class="s4">20</span><span class="s2">, </span><span class="s0">vertical</span><span class="s2">: </span><span class="s4">10</span><span class="s2">),</span>
+                      <span class="s2">),</span>
+                      <span class="s0">child</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Yes'</span><span class="s2">),</span>
+                    <span class="s2">),</span>
+                    <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">width</span><span class="s2">: </span><span class="s4">12</span><span class="s2">),</span>
+                    <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                      <span class="s0">onPressed</span><span class="s2">: () =&gt; </span><span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+                      <span class="s0">style</span><span class="s2">: </span><span class="s0">ElevatedButton</span><span class="s2">.</span><span class="s0">styleFrom</span><span class="s2">(</span>
+                        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white24</span><span class="s2">,</span>
+                        <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                        <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span>
+                            <span class="s0">horizontal</span><span class="s2">: </span><span class="s4">20</span><span class="s2">, </span><span class="s0">vertical</span><span class="s2">: </span><span class="s4">10</span><span class="s2">),</span>
+                      <span class="s2">),</span>
+                      <span class="s0">child</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'No'</span><span class="s2">),</span>
+                    <span class="s2">),</span>
+                  <span class="s2">],</span>
+                <span class="s2">),</span>
+              <span class="s2">],</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+        <span class="s2">);</span>
+      <span class="s2">},</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">, </span><span class="s5">//</span>
+      <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+        <span class="s0">title</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span>
+          <span class="s1">'Archive Patient'</span><span class="s2">,</span>
+          <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+            <span class="s0">fontWeight</span><span class="s2">: </span><span class="s0">FontWeight</span><span class="s2">.</span><span class="s0">bold</span><span class="s2">,</span>
+            <span class="s0">fontSize</span><span class="s2">: </span><span class="s4">20</span><span class="s2">,</span>
+            <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+        <span class="s0">centerTitle</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+      <span class="s2">),</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">Center</span><span class="s2">(</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+          <span class="s0">mainAxisAlignment</span><span class="s2">: </span><span class="s0">MainAxisAlignment</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+          <span class="s0">children</span><span class="s2">: [</span>
+            <span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span>
+              <span class="s1">'Press the button to archive a patient'</span><span class="s2">,</span>
+              <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16</span><span class="s2">),</span>
+            <span class="s2">),</span>
+            <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20</span><span class="s2">),</span>
+            <span class="s0">ElevatedButton</span><span class="s2">(</span>
+              <span class="s0">onPressed</span><span class="s2">: () =&gt; </span><span class="s0">_showArchiveConfirmation</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+              <span class="s0">style</span><span class="s2">: </span><span class="s0">ElevatedButton</span><span class="s2">.</span><span class="s0">styleFrom</span><span class="s2">(</span>
+                <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">redAccent</span><span class="s2">, </span><span class="s5">//</span>
+                <span class="s0">padding</span><span class="s2">:</span>
+                <span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">horizontal</span><span class="s2">: </span><span class="s4">24</span><span class="s2">, </span><span class="s0">vertical</span><span class="s2">: </span><span class="s4">16</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s0">child</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span>
+                <span class="s1">'Archive Patient'</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+              <span class="s2">),</span>
+            <span class="s2">),</span>
+          <span class="s2">],</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
