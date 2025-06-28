@@ -40,7 +40,7 @@ class BillingAndSubscriptionManagementScreen extends StatelessWidget {
                 );
               },
               icon: const Icon(Icons.payment),
-              label: const Text('Update Billing Details'),
+              label: const Text('Payment Details'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.indigo,
                 foregroundColor: Colors.white,

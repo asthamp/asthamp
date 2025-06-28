@@ -1,0 +1,185 @@
+<html>
+<head>
+<title>edit.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+edit.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'dart:io'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'package:image_picker/image_picker.dart'</span><span class="s2">;</span>
+
+<span class="s3">class </span><span class="s0">EditScreen </span><span class="s3">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s3">const </span><span class="s0">EditScreen</span><span class="s2">({</span><span class="s3">super</span><span class="s2">.</span><span class="s0">key</span><span class="s2">});</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">State</span><span class="s2">&lt;</span><span class="s0">EditScreen</span><span class="s2">&gt; </span><span class="s0">createState</span><span class="s2">() =&gt; </span><span class="s0">_EditScreenState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">_EditScreenState </span><span class="s3">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">EditScreen</span><span class="s2">&gt; {</span>
+  <span class="s3">final </span><span class="s0">TextEditingController _nameController </span><span class="s2">= </span><span class="s0">TextEditingController</span><span class="s2">();</span>
+  <span class="s3">final </span><span class="s0">TextEditingController _emailController </span><span class="s2">= </span><span class="s0">TextEditingController</span><span class="s2">();</span>
+  <span class="s3">final </span><span class="s0">TextEditingController _notesController </span><span class="s2">= </span><span class="s0">TextEditingController</span><span class="s2">();</span>
+  <span class="s0">String</span><span class="s2">? </span><span class="s0">_selectedRelationship</span><span class="s2">;</span>
+  <span class="s0">File</span><span class="s2">? </span><span class="s0">_selectedImage</span><span class="s2">;</span>
+
+  <span class="s0">Future</span><span class="s2">&lt;</span><span class="s3">void</span><span class="s2">&gt; </span><span class="s0">_pickImage</span><span class="s2">() </span><span class="s0">async </span><span class="s2">{</span>
+    <span class="s3">final </span><span class="s0">pickedImage </span><span class="s2">= </span><span class="s0">await ImagePicker</span><span class="s2">().</span><span class="s0">pickImage</span><span class="s2">(</span>
+      <span class="s0">source</span><span class="s2">: </span><span class="s0">ImageSource</span><span class="s2">.</span><span class="s0">gallery</span><span class="s2">,</span>
+      <span class="s0">imageQuality</span><span class="s2">: </span><span class="s4">85</span><span class="s2">,</span>
+    <span class="s2">);</span>
+
+    <span class="s3">if </span><span class="s2">(</span><span class="s0">pickedImage </span><span class="s2">!= </span><span class="s3">null</span><span class="s2">) {</span>
+      <span class="s0">setState</span><span class="s2">(() {</span>
+        <span class="s0">_selectedImage </span><span class="s2">= </span><span class="s0">File</span><span class="s2">(</span><span class="s0">pickedImage</span><span class="s2">.</span><span class="s0">path</span><span class="s2">);</span>
+      <span class="s2">});</span>
+    <span class="s2">}</span>
+  <span class="s2">}</span>
+
+  <span class="s3">void </span><span class="s0">_editPatient</span><span class="s2">() {</span>
+    <span class="s3">if </span><span class="s2">(</span><span class="s0">_nameController</span><span class="s2">.</span><span class="s0">text</span><span class="s2">.</span><span class="s0">isEmpty </span><span class="s2">|| </span><span class="s0">_selectedRelationship </span><span class="s2">== </span><span class="s3">null</span><span class="s2">) {</span>
+      <span class="s0">ScaffoldMessenger</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">showSnackBar</span><span class="s2">(</span>
+        <span class="s3">const </span><span class="s0">SnackBar</span><span class="s2">(</span><span class="s0">content</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">&quot;Please fill required fields&quot;</span><span class="s2">)),</span>
+      <span class="s2">);</span>
+      <span class="s3">return</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">ScaffoldMessenger</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">showSnackBar</span><span class="s2">(</span>
+      <span class="s3">const </span><span class="s0">SnackBar</span><span class="s2">(</span><span class="s0">content</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">&quot;Patient Updated&quot;</span><span class="s2">)),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+        <span class="s0">title</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Edit Patient'</span><span class="s2">,</span>
+        <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+          <span class="s0">fontSize</span><span class="s2">: </span><span class="s4">25</span><span class="s2">,</span>
+          <span class="s0">fontWeight</span><span class="s2">: </span><span class="s0">FontWeight</span><span class="s2">.</span><span class="s0">bold</span><span class="s2">,</span>
+          <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+        <span class="s2">),</span>
+        <span class="s2">),</span>
+
+        <span class="s0">centerTitle</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+        <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+
+
+      <span class="s2">),</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">SafeArea</span><span class="s2">(</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">SingleChildScrollView</span><span class="s2">(</span>
+          <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s4">16</span><span class="s2">),</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+            <span class="s0">crossAxisAlignment</span><span class="s2">: </span><span class="s0">CrossAxisAlignment</span><span class="s2">.</span><span class="s0">stretch</span><span class="s2">,</span>
+            <span class="s0">children</span><span class="s2">: [</span>
+              <span class="s0">TextField</span><span class="s2">(</span>
+                <span class="s0">controller</span><span class="s2">: </span><span class="s0">_nameController</span><span class="s2">,</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s3">const </span><span class="s0">InputDecoration</span><span class="s2">(</span><span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Name'</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">12</span><span class="s2">),</span>
+              <span class="s0">DropdownButtonFormField</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                <span class="s0">value</span><span class="s2">: </span><span class="s0">_selectedRelationship</span><span class="s2">,</span>
+                <span class="s0">onChanged</span><span class="s2">: (</span><span class="s0">value</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s0">_selectedRelationship </span><span class="s2">= </span><span class="s0">value</span><span class="s2">;</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">items</span><span class="s2">: [</span><span class="s1">'Parent'</span><span class="s2">, </span><span class="s1">'Sibling'</span><span class="s2">, </span><span class="s1">'Spouse'</span><span class="s2">, </span><span class="s1">'Other'</span><span class="s2">]</span>
+                    <span class="s2">.</span><span class="s0">map</span><span class="s2">((</span><span class="s0">label</span><span class="s2">) =&gt; </span><span class="s0">DropdownMenuItem</span><span class="s2">(</span>
+                  <span class="s0">value</span><span class="s2">: </span><span class="s0">label</span><span class="s2">,</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s0">label</span><span class="s2">),</span>
+                <span class="s2">))</span>
+                    <span class="s2">.</span><span class="s0">toList</span><span class="s2">(),</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s3">const </span><span class="s0">InputDecoration</span><span class="s2">(</span><span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Relationship'</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">12</span><span class="s2">),</span>
+              <span class="s0">TextField</span><span class="s2">(</span>
+                <span class="s0">controller</span><span class="s2">: </span><span class="s0">_emailController</span><span class="s2">,</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s3">const </span><span class="s0">InputDecoration</span><span class="s2">(</span><span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Email'</span><span class="s2">),</span>
+                <span class="s0">keyboardType</span><span class="s2">: </span><span class="s0">TextInputType</span><span class="s2">.</span><span class="s0">emailAddress</span><span class="s2">,</span>
+              <span class="s2">),</span>
+              <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">12</span><span class="s2">),</span>
+              <span class="s0">TextField</span><span class="s2">(</span>
+                <span class="s0">controller</span><span class="s2">: </span><span class="s0">_notesController</span><span class="s2">,</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s3">const </span><span class="s0">InputDecoration</span><span class="s2">(</span><span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Notes'</span><span class="s2">),</span>
+                <span class="s0">maxLines</span><span class="s2">: </span><span class="s4">3</span><span class="s2">,</span>
+              <span class="s2">),</span>
+              <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">70</span><span class="s2">),</span>
+
+              <span class="s5">// Upload Section</span>
+              <span class="s0">Center</span><span class="s2">(</span>
+                <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+                  <span class="s0">children</span><span class="s2">: [</span>
+                    <span class="s3">if </span><span class="s2">(</span><span class="s0">_selectedImage </span><span class="s2">!= </span><span class="s3">null</span><span class="s2">)</span>
+                      <span class="s0">Padding</span><span class="s2">(</span>
+                        <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">only</span><span class="s2">(</span><span class="s0">bottom</span><span class="s2">: </span><span class="s4">16</span><span class="s2">),</span>
+                        <span class="s0">child</span><span class="s2">: </span><span class="s0">Image</span><span class="s2">.</span><span class="s0">file</span><span class="s2">(</span>
+                          <span class="s0">_selectedImage</span><span class="s2">!,</span>
+                          <span class="s0">height</span><span class="s2">: </span><span class="s4">100</span><span class="s2">,</span>
+                        <span class="s2">),</span>
+                      <span class="s2">),</span>
+                    <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                      <span class="s0">onPressed</span><span class="s2">: </span><span class="s0">_pickImage</span><span class="s2">,</span>
+                      <span class="s0">style</span><span class="s2">: </span><span class="s0">ElevatedButton</span><span class="s2">.</span><span class="s0">styleFrom</span><span class="s2">(</span>
+                        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+                        <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span>
+                            <span class="s0">vertical</span><span class="s2">: </span><span class="s4">20</span><span class="s2">, </span><span class="s0">horizontal</span><span class="s2">: </span><span class="s4">10</span><span class="s2">),</span>
+                        <span class="s0">minimumSize</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Size</span><span class="s2">(</span><span class="s4">200</span><span class="s2">, </span><span class="s4">50</span><span class="s2">),</span>
+                        <span class="s0">shape</span><span class="s2">: </span><span class="s0">RoundedRectangleBorder</span><span class="s2">(</span>
+                          <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s4">10</span><span class="s2">),</span>
+                        <span class="s2">),</span>
+                      <span class="s2">),</span>
+                      <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+                        <span class="s0">children</span><span class="s2">: </span><span class="s3">const </span><span class="s2">[</span>
+                          <span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">upload</span><span class="s2">, </span><span class="s0">size</span><span class="s2">: </span><span class="s4">20</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+                          <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">10</span><span class="s2">),</span>
+                          <span class="s0">Text</span><span class="s2">(</span>
+                            <span class="s1">'Upload Photo/Video'</span><span class="s2">,</span>
+                            <span class="s0">style</span><span class="s2">:</span>
+                            <span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+                          <span class="s2">),</span>
+                        <span class="s2">],</span>
+                      <span class="s2">),</span>
+                    <span class="s2">),</span>
+                  <span class="s2">],</span>
+                <span class="s2">),</span>
+              <span class="s2">),</span>
+
+              <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">55</span><span class="s2">),</span>
+
+              <span class="s5">// Submit Button</span>
+              <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                <span class="s0">onPressed</span><span class="s2">: </span><span class="s0">_editPatient</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">ElevatedButton</span><span class="s2">.</span><span class="s0">styleFrom</span><span class="s2">(</span>
+                  <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">vertical</span><span class="s2">: </span><span class="s4">10</span><span class="s2">),</span>
+                  <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+                  <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                  <span class="s0">textStyle</span><span class="s2">: </span><span class="s3">const </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">26</span><span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s0">child</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Submit'</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">15</span><span class="s2">),</span>
+            <span class="s2">],</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+
+</pre>
+</body>
+</html>

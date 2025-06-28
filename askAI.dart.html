@@ -1,0 +1,174 @@
+<html>
+<head>
+<title>askAI.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #7a7e85;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+askAI.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'package:http/http.dart' </span><span class="s0">as http</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'dart:convert'</span><span class="s2">;</span>
+
+<span class="s3">void </span><span class="s0">main</span><span class="s2">() {</span>
+  <span class="s0">runApp</span><span class="s2">(</span><span class="s3">const </span><span class="s0">MaterialApp</span><span class="s2">(</span><span class="s0">home</span><span class="s2">: </span><span class="s0">AskAIScreen</span><span class="s2">()));</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">AskAIScreen </span><span class="s3">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s3">const </span><span class="s0">AskAIScreen</span><span class="s2">({</span><span class="s3">super</span><span class="s2">.</span><span class="s0">key</span><span class="s2">});</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">State</span><span class="s2">&lt;</span><span class="s0">AskAIScreen</span><span class="s2">&gt; </span><span class="s0">createState</span><span class="s2">() =&gt; </span><span class="s0">_AskAIScreenState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">_AskAIScreenState </span><span class="s3">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">AskAIScreen</span><span class="s2">&gt; {</span>
+  <span class="s3">final </span><span class="s0">List</span><span class="s2">&lt;</span><span class="s0">Map</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">, </span><span class="s0">String</span><span class="s2">&gt;&gt; </span><span class="s0">_messages </span><span class="s2">= [];</span>
+  <span class="s3">final </span><span class="s0">TextEditingController _controller </span><span class="s2">= </span><span class="s0">TextEditingController</span><span class="s2">();</span>
+  <span class="s0">bool _isLoading </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+
+  <span class="s0">Future</span><span class="s2">&lt;</span><span class="s3">void</span><span class="s2">&gt; </span><span class="s0">_sendMessage</span><span class="s2">(</span><span class="s0">String message</span><span class="s2">) </span><span class="s0">async </span><span class="s2">{</span>
+    <span class="s3">if </span><span class="s2">(</span><span class="s0">message</span><span class="s2">.</span><span class="s0">trim</span><span class="s2">().</span><span class="s0">isEmpty</span><span class="s2">) </span><span class="s3">return</span><span class="s2">;</span>
+
+    <span class="s0">setState</span><span class="s2">(() {</span>
+      <span class="s0">_messages</span><span class="s2">.</span><span class="s0">add</span><span class="s2">({</span><span class="s1">'role'</span><span class="s2">: </span><span class="s1">'user'</span><span class="s2">, </span><span class="s1">'content'</span><span class="s2">: </span><span class="s0">message</span><span class="s2">});</span>
+      <span class="s0">_isLoading </span><span class="s2">= </span><span class="s3">true</span><span class="s2">;</span>
+      <span class="s0">_controller</span><span class="s2">.</span><span class="s0">clear</span><span class="s2">();</span>
+    <span class="s2">});</span>
+
+    <span class="s3">try </span><span class="s2">{</span>
+      <span class="s3">final </span><span class="s0">response </span><span class="s2">= </span><span class="s0">await http</span><span class="s2">.</span><span class="s0">post</span><span class="s2">(</span>
+        <span class="s0">Uri</span><span class="s2">.</span><span class="s0">parse</span><span class="s2">(</span><span class="s1">&quot;https://openrouter.ai/api/v1/chat/completions&quot;</span><span class="s2">),</span>
+        <span class="s0">headers</span><span class="s2">: {</span>
+          <span class="s1">'Content-Type'</span><span class="s2">: </span><span class="s1">'application/json'</span><span class="s2">,</span>
+          <span class="s1">'Authorization'</span><span class="s2">: </span><span class="s1">'Bearer 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'</span><span class="s2">, </span><span class="s4">// Replace this</span>
+
+        <span class="s2">},</span>
+
+
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">jsonEncode</span><span class="s2">({</span>
+      <span class="s1">&quot;model&quot;</span><span class="s2">: </span><span class="s1">&quot;deepseek/deepseek-r1-0528-qwen3-8b&quot;</span><span class="s2">, </span><span class="s4">// model that I am using form the openrouter</span>
+          <span class="s1">&quot;messages&quot;</span><span class="s2">: </span><span class="s0">_messages</span><span class="s2">,</span>
+        <span class="s2">}),</span>
+      <span class="s2">);</span>
+
+      <span class="s3">if </span><span class="s2">(</span><span class="s0">response</span><span class="s2">.</span><span class="s0">statusCode </span><span class="s2">== </span><span class="s5">200</span><span class="s2">) {</span>
+        <span class="s3">final </span><span class="s0">decoded </span><span class="s2">= </span><span class="s0">jsonDecode</span><span class="s2">(</span><span class="s0">response</span><span class="s2">.</span><span class="s0">body</span><span class="s2">);</span>
+        <span class="s3">final </span><span class="s0">reply </span><span class="s2">= </span><span class="s0">decoded</span><span class="s2">[</span><span class="s1">'choices'</span><span class="s2">][</span><span class="s5">0</span><span class="s2">][</span><span class="s1">'message'</span><span class="s2">][</span><span class="s1">'content'</span><span class="s2">];</span>
+        <span class="s0">setState</span><span class="s2">(() {</span>
+          <span class="s0">_messages</span><span class="s2">.</span><span class="s0">add</span><span class="s2">({</span><span class="s1">'role'</span><span class="s2">: </span><span class="s1">'assistant'</span><span class="s2">, </span><span class="s1">'content'</span><span class="s2">: </span><span class="s0">reply</span><span class="s2">});</span>
+        <span class="s2">});</span>
+      <span class="s2">} </span><span class="s3">else </span><span class="s2">{</span>
+        <span class="s0">setState</span><span class="s2">(() {</span>
+          <span class="s0">_messages</span><span class="s2">.</span><span class="s0">add</span><span class="s2">({</span>
+            <span class="s1">'role'</span><span class="s2">: </span><span class="s1">'assistant'</span><span class="s2">,</span>
+            <span class="s1">'content'</span><span class="s2">: </span><span class="s1">'Error: </span><span class="s2">${</span><span class="s0">response</span><span class="s2">.</span><span class="s0">statusCode</span><span class="s2">}</span><span class="s1">'</span>
+          <span class="s2">});</span>
+        <span class="s2">});</span>
+      <span class="s2">}</span>
+    <span class="s2">} </span><span class="s3">catch </span><span class="s2">(</span><span class="s0">e</span><span class="s2">) {</span>
+      <span class="s0">setState</span><span class="s2">(() {</span>
+        <span class="s0">_messages</span><span class="s2">.</span><span class="s0">add</span><span class="s2">({</span><span class="s1">'role'</span><span class="s2">: </span><span class="s1">'assistant'</span><span class="s2">, </span><span class="s1">'content'</span><span class="s2">: </span><span class="s1">'Failed: </span><span class="s2">$</span><span class="s0">e</span><span class="s1">'</span><span class="s2">});</span>
+      <span class="s2">});</span>
+    <span class="s2">} </span><span class="s3">finally </span><span class="s2">{</span>
+      <span class="s0">setState</span><span class="s2">(() {</span>
+        <span class="s0">_isLoading </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+      <span class="s2">});</span>
+    <span class="s2">}</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildMessage</span><span class="s2">(</span><span class="s0">Map</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">, </span><span class="s0">String</span><span class="s2">&gt; </span><span class="s0">message</span><span class="s2">) {</span>
+    <span class="s3">final </span><span class="s0">isUser </span><span class="s2">= </span><span class="s0">message</span><span class="s2">[</span><span class="s1">'role'</span><span class="s2">] == </span><span class="s1">'user'</span><span class="s2">;</span>
+    <span class="s3">return </span><span class="s0">Align</span><span class="s2">(</span>
+      <span class="s0">alignment</span><span class="s2">: </span><span class="s0">isUser </span><span class="s2">? </span><span class="s0">Alignment</span><span class="s2">.</span><span class="s0">centerRight </span><span class="s2">: </span><span class="s0">Alignment</span><span class="s2">.</span><span class="s0">centerLeft</span><span class="s2">,</span>
+      <span class="s0">child</span><span class="s2">: </span><span class="s0">Container</span><span class="s2">(</span>
+        <span class="s0">margin</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">vertical</span><span class="s2">: </span><span class="s5">6</span><span class="s2">, </span><span class="s0">horizontal</span><span class="s2">: </span><span class="s5">12</span><span class="s2">),</span>
+        <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s5">12</span><span class="s2">),</span>
+        <span class="s0">decoration</span><span class="s2">: </span><span class="s0">BoxDecoration</span><span class="s2">(</span>
+          <span class="s0">color</span><span class="s2">: </span><span class="s0">isUser </span><span class="s2">? </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo </span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s5">300</span><span class="s2">],</span>
+          <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s5">12</span><span class="s2">),</span>
+        <span class="s2">),</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+          <span class="s0">message</span><span class="s2">[</span><span class="s1">'content'</span><span class="s2">] ?? </span><span class="s1">''</span><span class="s2">,</span>
+          <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">isUser </span><span class="s2">? </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white </span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black87</span><span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+        <span class="s0">title</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'CareConnect Chatbot'</span><span class="s2">),</span>
+        <span class="s0">centerTitle</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+        <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+      <span class="s2">),</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+        <span class="s0">children</span><span class="s2">: [</span>
+          <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s5">8</span><span class="s2">),</span>
+          <span class="s3">const </span><span class="s0">Padding</span><span class="s2">(</span>
+            <span class="s0">padding</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s5">8.0</span><span class="s2">),</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">&quot;How can I assist you today?&quot;</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">16</span><span class="s2">)),</span>
+          <span class="s2">),</span>
+          <span class="s3">const </span><span class="s0">Divider</span><span class="s2">(),</span>
+          <span class="s0">Expanded</span><span class="s2">(</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">ListView</span><span class="s2">.</span><span class="s0">builder</span><span class="s2">(</span>
+              <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">vertical</span><span class="s2">: </span><span class="s5">8</span><span class="s2">),</span>
+              <span class="s0">itemCount</span><span class="s2">: </span><span class="s0">_messages</span><span class="s2">.</span><span class="s0">length</span><span class="s2">,</span>
+              <span class="s0">itemBuilder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">, </span><span class="s0">index</span><span class="s2">) {</span>
+                <span class="s3">return </span><span class="s0">_buildMessage</span><span class="s2">(</span><span class="s0">_messages</span><span class="s2">[</span><span class="s0">index</span><span class="s2">]);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+          <span class="s3">if </span><span class="s2">(</span><span class="s0">_isLoading</span><span class="s2">)</span>
+            <span class="s3">const </span><span class="s0">Padding</span><span class="s2">(</span>
+              <span class="s0">padding</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s5">8.0</span><span class="s2">),</span>
+              <span class="s0">child</span><span class="s2">: </span><span class="s0">CircularProgressIndicator</span><span class="s2">(),</span>
+            <span class="s2">),</span>
+          <span class="s0">Padding</span><span class="s2">(</span>
+            <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">horizontal</span><span class="s2">: </span><span class="s5">8</span><span class="s2">, </span><span class="s0">vertical</span><span class="s2">: </span><span class="s5">12</span><span class="s2">),</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">Row</span><span class="s2">(</span>
+              <span class="s0">children</span><span class="s2">: [</span>
+                <span class="s0">Expanded</span><span class="s2">(</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">TextField</span><span class="s2">(</span>
+                    <span class="s0">controller</span><span class="s2">: </span><span class="s0">_controller</span><span class="s2">,</span>
+                    <span class="s0">onSubmitted</span><span class="s2">: </span><span class="s0">_sendMessage</span><span class="s2">,</span>
+                    <span class="s0">decoration</span><span class="s2">: </span><span class="s3">const </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+                      <span class="s0">hintText</span><span class="s2">: </span><span class="s1">'Type your message...'</span><span class="s2">,</span>
+                      <span class="s0">border</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(),</span>
+                    <span class="s2">),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s3">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">width</span><span class="s2">: </span><span class="s5">8</span><span class="s2">),</span>
+                <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                  <span class="s0">onPressed</span><span class="s2">: () =&gt; </span><span class="s0">_sendMessage</span><span class="s2">(</span><span class="s0">_controller</span><span class="s2">.</span><span class="s0">text</span><span class="s2">),</span>
+                  <span class="s0">style</span><span class="s2">: </span><span class="s0">ElevatedButton</span><span class="s2">.</span><span class="s0">styleFrom</span><span class="s2">(</span>
+                    <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+                    <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                  <span class="s2">),</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s3">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">&quot;Send&quot;</span><span class="s2">),</span>
+                <span class="s2">)</span>
+              <span class="s2">],</span>
+            <span class="s2">),</span>
+          <span class="s2">)</span>
+        <span class="s2">],</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
