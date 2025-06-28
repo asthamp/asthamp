@@ -219,12 +219,15 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
                                           Navigator.pushNamed(context, '/archive');
                                         } else if (value == 'inviteFamilyMember') {
                                           Navigator.pushNamed(context, '/invite_Family_Member');
+                                        } else if (value == 'MediaScreen') {
+                                          Navigator.pushNamed(context, '/MediaScreen');
                                         }
                                       },
                                       itemBuilder: (BuildContext context) => const [
                                         PopupMenuItem(value: 'edit', child: Text('Edit')),
                                         PopupMenuItem(value: 'archive', child: Text('Archive')),
                                         PopupMenuItem(value: 'inviteFamilyMember', child: Text('Invite Family Member')),
+                                        PopupMenuItem(value: 'MediaScreen', child: Text('Media Upload')),
                                       ],
                                     ),
                                   ],

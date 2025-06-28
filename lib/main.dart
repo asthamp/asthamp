@@ -5,6 +5,7 @@
 
 
 
+import 'package:care_connect/Caregiver_dashboard/MediaScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'Caregiver_dashboard/patient_dashboard_screen.dart';
@@ -38,6 +39,7 @@ class CareConnectApp extends StatelessWidget {
         '/edit': (context) => EditScreen(),
         '/archive': (context) => ArchiveScreen(),
         '/invite_Family_Member': (context) => InviteFamilyMemberScreen(),
+        '/MediaScreen': (context) => MediaScreen(),
       },
     );
   }
