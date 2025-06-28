@@ -1,0 +1,323 @@
+<html>
+<head>
+<title>patient_dashboard_screen.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #cf8e6d;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+patient_dashboard_screen.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'AddPatients.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'../Hamburger_Menu_Items/HealthCareNotes.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'../Hamburger_Menu_Items/NotificationSetting.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'../Hamburger_Menu_Items/SOSNotification.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'../Hamburger_Menu_Items/TeleHealthBridge.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'../Hamburger_Menu_Items/TrackingAndMonitoring.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'ViewLogs.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'askAI.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'call.dart'</span><span class="s2">;           </span><span class="s3">// Make sure this is the call.dart with CallScreen having both roomName and patientName</span>
+<span class="s0">import </span><span class="s1">'message.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'patient_model.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'patient_mock_service.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'edit.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'archive.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'../Hamburger_Menu_Items/Billing Management.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'../Hamburger_Menu_Items/Schedule Management.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'invite_Family_Member.dart'</span><span class="s2">;</span>
+
+<span class="s4">class </span><span class="s0">PatientDashboardScreen </span><span class="s4">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s4">final </span><span class="s0">String caregiverEmail</span><span class="s2">;</span>
+
+  <span class="s4">const </span><span class="s0">PatientDashboardScreen</span><span class="s2">({</span><span class="s0">required </span><span class="s4">this</span><span class="s2">.</span><span class="s0">caregiverEmail</span><span class="s2">, </span><span class="s4">super</span><span class="s2">.</span><span class="s0">key</span><span class="s2">});</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">State</span><span class="s2">&lt;</span><span class="s0">PatientDashboardScreen</span><span class="s2">&gt; </span><span class="s0">createState</span><span class="s2">() =&gt; </span><span class="s0">_PatientDashboardScreenState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s4">class </span><span class="s0">_PatientDashboardScreenState </span><span class="s4">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">PatientDashboardScreen</span><span class="s2">&gt; {</span>
+  <span class="s0">late Future</span><span class="s2">&lt;</span><span class="s0">List</span><span class="s2">&lt;</span><span class="s0">Patient</span><span class="s2">&gt;&gt; </span><span class="s0">futurePatients</span><span class="s2">;</span>
+
+  <span class="s0">@override</span>
+  <span class="s4">void </span><span class="s0">initState</span><span class="s2">() {</span>
+    <span class="s4">super</span><span class="s2">.</span><span class="s0">initState</span><span class="s2">();</span>
+    <span class="s0">futurePatients </span><span class="s2">= </span><span class="s0">fetchPatientsForCaregiver</span><span class="s2">(</span><span class="s0">widget</span><span class="s2">.</span><span class="s0">caregiverEmail</span><span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s4">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+        <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span>
+          <span class="s1">'Caregiver Dashboard'</span><span class="s2">,</span>
+          <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontWeight</span><span class="s2">: </span><span class="s0">FontWeight</span><span class="s2">.</span><span class="s0">bold</span><span class="s2">, </span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">30</span><span class="s2">),</span>
+        <span class="s2">),</span>
+        <span class="s0">centerTitle</span><span class="s2">: </span><span class="s4">true</span><span class="s2">,</span>
+        <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+      <span class="s2">),</span>
+
+      <span class="s0">drawer</span><span class="s2">: </span><span class="s0">Drawer</span><span class="s2">(</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">ListView</span><span class="s2">(</span>
+          <span class="s0">padding</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">zero</span><span class="s2">,</span>
+          <span class="s0">children</span><span class="s2">: [</span>
+            <span class="s4">const </span><span class="s0">DrawerHeader</span><span class="s2">(</span>
+              <span class="s0">decoration</span><span class="s2">: </span><span class="s0">BoxDecoration</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">),</span>
+              <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Main Menu'</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">, </span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">24</span><span class="s2">)),</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">leading</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">payment</span><span class="s2">),</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Billing and Subscription Management'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: () {</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">BillingAndSubscriptionManagementScreen</span><span class="s2">()),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">leading</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">schedule</span><span class="s2">),</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Schedule Management'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: () {</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">ScheduleManagementScreen</span><span class="s2">()),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">leading</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">track_changes</span><span class="s2">),</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Tracking &amp; Monitoring'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: () {</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">TrackingAndMonitoringScreen</span><span class="s2">()),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">leading</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">settings</span><span class="s2">),</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Notification Setting'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: () {</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">NotificationSettingScreen</span><span class="s2">()),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">leading</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">call</span><span class="s2">),</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'TeleHealth Bridge'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: () {</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">TeleHealthBridgeScreen</span><span class="s2">()),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">leading</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">note</span><span class="s2">),</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Health Care Notes'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: () {</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">HealthCareNotesScreen</span><span class="s2">()),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">leading</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">notification_important</span><span class="s2">),</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'SOS Notification'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: () {</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">);</span>
+                <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">SOSNotificationScreen</span><span class="s2">()),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+          <span class="s2">],</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+        <span class="s0">children</span><span class="s2">: [</span>
+          <span class="s0">Padding</span><span class="s2">(</span>
+            <span class="s0">padding</span><span class="s2">: </span><span class="s4">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s5">8.0</span><span class="s2">),</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">Row</span><span class="s2">(</span>
+              <span class="s0">mainAxisAlignment</span><span class="s2">: </span><span class="s0">MainAxisAlignment</span><span class="s2">.</span><span class="s0">end</span><span class="s2">,</span>
+              <span class="s0">children</span><span class="s2">: [</span>
+                <span class="s0">GestureDetector</span><span class="s2">(</span>
+                  <span class="s0">onTap</span><span class="s2">: () {</span>
+                    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span><span class="s0">context</span><span class="s2">, </span><span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">AddPatientScreen</span><span class="s2">()));</span>
+                  <span class="s2">},</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">Container</span><span class="s2">(</span>
+                    <span class="s0">width</span><span class="s2">: </span><span class="s5">50</span><span class="s2">,</span>
+                    <span class="s0">height</span><span class="s2">: </span><span class="s5">50</span><span class="s2">,</span>
+                    <span class="s0">decoration</span><span class="s2">: </span><span class="s0">BoxDecoration</span><span class="s2">(</span>
+                      <span class="s0">shape</span><span class="s2">: </span><span class="s0">BoxShape</span><span class="s2">.</span><span class="s0">circle</span><span class="s2">,</span>
+                      <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                      <span class="s0">border</span><span class="s2">: </span><span class="s0">Border</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">, </span><span class="s0">width</span><span class="s2">: </span><span class="s5">3</span><span class="s2">),</span>
+                    <span class="s2">),</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Center</span><span class="s2">(</span><span class="s0">child</span><span class="s2">: </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">add</span><span class="s2">, </span><span class="s0">size</span><span class="s2">: </span><span class="s5">40</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">)),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+              <span class="s2">],</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+          <span class="s0">Expanded</span><span class="s2">(</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">FutureBuilder</span><span class="s2">&lt;</span><span class="s0">List</span><span class="s2">&lt;</span><span class="s0">Patient</span><span class="s2">&gt;&gt;(</span>
+              <span class="s0">future</span><span class="s2">: </span><span class="s0">futurePatients</span><span class="s2">,</span>
+              <span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">, </span><span class="s0">snapshot</span><span class="s2">) {</span>
+                <span class="s4">if </span><span class="s2">(</span><span class="s0">snapshot</span><span class="s2">.</span><span class="s0">connectionState </span><span class="s2">== </span><span class="s0">ConnectionState</span><span class="s2">.</span><span class="s0">waiting</span><span class="s2">) {</span>
+                  <span class="s4">return const </span><span class="s0">Center</span><span class="s2">(</span><span class="s0">child</span><span class="s2">: </span><span class="s0">CircularProgressIndicator</span><span class="s2">());</span>
+                <span class="s2">} </span><span class="s4">else if </span><span class="s2">(</span><span class="s0">snapshot</span><span class="s2">.</span><span class="s0">hasError</span><span class="s2">) {</span>
+                  <span class="s4">return const </span><span class="s0">Center</span><span class="s2">(</span><span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Error loading patients.'</span><span class="s2">));</span>
+                <span class="s2">} </span><span class="s4">else if </span><span class="s2">(!</span><span class="s0">snapshot</span><span class="s2">.</span><span class="s0">hasData </span><span class="s2">|| </span><span class="s0">snapshot</span><span class="s2">.</span><span class="s0">data</span><span class="s2">!.</span><span class="s0">isEmpty</span><span class="s2">) {</span>
+                  <span class="s4">return const </span><span class="s0">Center</span><span class="s2">(</span><span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'No patients assigned.'</span><span class="s2">));</span>
+                <span class="s2">}</span>
+
+                <span class="s4">final </span><span class="s0">patients </span><span class="s2">= </span><span class="s0">snapshot</span><span class="s2">.</span><span class="s0">data</span><span class="s2">!;</span>
+                <span class="s4">return </span><span class="s0">Padding</span><span class="s2">(</span>
+                  <span class="s0">padding</span><span class="s2">: </span><span class="s4">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">only</span><span class="s2">(</span><span class="s0">top</span><span class="s2">: </span><span class="s5">16</span><span class="s2">),</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">Scrollbar</span><span class="s2">(</span>
+                    <span class="s0">thumbVisibility</span><span class="s2">: </span><span class="s4">true</span><span class="s2">,</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s0">ListView</span><span class="s2">.</span><span class="s0">separated</span><span class="s2">(</span>
+                      <span class="s0">itemCount</span><span class="s2">: </span><span class="s0">patients</span><span class="s2">.</span><span class="s0">length</span><span class="s2">,</span>
+                      <span class="s0">separatorBuilder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">, </span><span class="s0">index</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s5">25</span><span class="s2">),</span>
+                      <span class="s0">itemBuilder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">, </span><span class="s0">index</span><span class="s2">) {</span>
+                        <span class="s4">final </span><span class="s0">patient </span><span class="s2">= </span><span class="s0">patients</span><span class="s2">[</span><span class="s0">index</span><span class="s2">];</span>
+                        <span class="s4">return </span><span class="s0">Card</span><span class="s2">(</span>
+                          <span class="s0">margin</span><span class="s2">: </span><span class="s4">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">horizontal</span><span class="s2">: </span><span class="s5">10</span><span class="s2">),</span>
+                          <span class="s0">shape</span><span class="s2">: </span><span class="s0">RoundedRectangleBorder</span><span class="s2">(</span>
+                            <span class="s0">side</span><span class="s2">: </span><span class="s4">const </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">, </span><span class="s0">width</span><span class="s2">: </span><span class="s5">1</span><span class="s2">),</span>
+                            <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s5">10</span><span class="s2">),</span>
+                          <span class="s2">),</span>
+                          <span class="s0">child</span><span class="s2">: </span><span class="s0">Padding</span><span class="s2">(</span>
+                            <span class="s0">padding</span><span class="s2">: </span><span class="s4">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s5">12.0</span><span class="s2">),</span>
+                            <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+                              <span class="s0">crossAxisAlignment</span><span class="s2">: </span><span class="s0">CrossAxisAlignment</span><span class="s2">.</span><span class="s0">start</span><span class="s2">,</span>
+                              <span class="s0">children</span><span class="s2">: [</span>
+                                <span class="s0">Row</span><span class="s2">(</span>
+                                  <span class="s0">crossAxisAlignment</span><span class="s2">: </span><span class="s0">CrossAxisAlignment</span><span class="s2">.</span><span class="s0">start</span><span class="s2">,</span>
+                                  <span class="s0">children</span><span class="s2">: [</span>
+                                    <span class="s4">const </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">person</span><span class="s2">, </span><span class="s0">size</span><span class="s2">: </span><span class="s5">40</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">),</span>
+                                    <span class="s4">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">width</span><span class="s2">: </span><span class="s5">10</span><span class="s2">),</span>
+                                    <span class="s0">Expanded</span><span class="s2">(</span>
+                                      <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+                                        <span class="s0">crossAxisAlignment</span><span class="s2">: </span><span class="s0">CrossAxisAlignment</span><span class="s2">.</span><span class="s0">start</span><span class="s2">,</span>
+                                        <span class="s0">children</span><span class="s2">: [</span>
+                                          <span class="s0">Text</span><span class="s2">(</span><span class="s0">patient</span><span class="s2">.</span><span class="s0">name</span><span class="s2">,</span>
+                                              <span class="s0">style</span><span class="s2">: </span><span class="s4">const </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">18</span><span class="s2">, </span><span class="s0">fontWeight</span><span class="s2">: </span><span class="s0">FontWeight</span><span class="s2">.</span><span class="s0">bold</span><span class="s2">)),</span>
+                                          <span class="s4">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s5">4</span><span class="s2">),</span>
+                                          <span class="s0">Text</span><span class="s2">(</span><span class="s1">'Age: </span><span class="s2">${</span><span class="s0">patient</span><span class="s2">.</span><span class="s0">age</span><span class="s2">}</span><span class="s1">'</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s4">const </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">16</span><span class="s2">)),</span>
+                                        <span class="s2">],</span>
+                                      <span class="s2">),</span>
+                                    <span class="s2">),</span>
+                                    <span class="s0">PopupMenuButton</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                                      <span class="s0">onSelected</span><span class="s2">: (</span><span class="s0">value</span><span class="s2">) {</span>
+                                        <span class="s4">if </span><span class="s2">(</span><span class="s0">value </span><span class="s2">== </span><span class="s1">'edit'</span><span class="s2">) {</span>
+                                          <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pushNamed</span><span class="s2">(</span><span class="s0">context</span><span class="s2">, </span><span class="s1">'/edit'</span><span class="s2">);</span>
+                                        <span class="s2">} </span><span class="s4">else if </span><span class="s2">(</span><span class="s0">value </span><span class="s2">== </span><span class="s1">'archive'</span><span class="s2">) {</span>
+                                          <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pushNamed</span><span class="s2">(</span><span class="s0">context</span><span class="s2">, </span><span class="s1">'/archive'</span><span class="s2">);</span>
+                                        <span class="s2">} </span><span class="s4">else if </span><span class="s2">(</span><span class="s0">value </span><span class="s2">== </span><span class="s1">'inviteFamilyMember'</span><span class="s2">) {</span>
+                                          <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pushNamed</span><span class="s2">(</span><span class="s0">context</span><span class="s2">, </span><span class="s1">'/invite_Family_Member'</span><span class="s2">);</span>
+                                        <span class="s2">}</span>
+                                      <span class="s2">},</span>
+                                      <span class="s0">itemBuilder</span><span class="s2">: (</span><span class="s0">BuildContext context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s2">[</span>
+                                        <span class="s0">PopupMenuItem</span><span class="s2">(</span><span class="s0">value</span><span class="s2">: </span><span class="s1">'edit'</span><span class="s2">, </span><span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Edit'</span><span class="s2">)),</span>
+                                        <span class="s0">PopupMenuItem</span><span class="s2">(</span><span class="s0">value</span><span class="s2">: </span><span class="s1">'archive'</span><span class="s2">, </span><span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Archive'</span><span class="s2">)),</span>
+                                        <span class="s0">PopupMenuItem</span><span class="s2">(</span><span class="s0">value</span><span class="s2">: </span><span class="s1">'inviteFamilyMember'</span><span class="s2">, </span><span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Invite Family Member'</span><span class="s2">)),</span>
+                                      <span class="s2">],</span>
+                                    <span class="s2">),</span>
+                                  <span class="s2">],</span>
+                                <span class="s2">),</span>
+                                <span class="s4">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s5">8</span><span class="s2">),</span>
+                                <span class="s0">Text</span><span class="s2">(</span><span class="s1">'Last Interaction: </span><span class="s2">${</span><span class="s0">patient</span><span class="s2">.</span><span class="s0">lastInteraction</span><span class="s2">}</span><span class="s1">'</span><span class="s2">),</span>
+                                <span class="s4">const </span><span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s5">10</span><span class="s2">),</span>
+                                <span class="s0">Row</span><span class="s2">(</span>
+                                  <span class="s0">mainAxisAlignment</span><span class="s2">: </span><span class="s0">MainAxisAlignment</span><span class="s2">.</span><span class="s0">spaceEvenly</span><span class="s2">,</span>
+                                  <span class="s0">children</span><span class="s2">: [</span>
+                                    <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                                      <span class="s0">onPressed</span><span class="s2">: () {</span>
+                                        <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span><span class="s0">context</span><span class="s2">,</span>
+                                            <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">ViewLogScreen</span><span class="s2">()));</span>
+                                      <span class="s2">},</span>
+                                      <span class="s0">child</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'View Logs'</span><span class="s2">),</span>
+                                    <span class="s2">),</span>
+                                    <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                                      <span class="s0">onPressed</span><span class="s2">: () {</span>
+                                        <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                                          <span class="s0">context</span><span class="s2">,</span>
+                                          <span class="s0">MaterialPageRoute</span><span class="s2">(</span>
+                                            <span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">CallScreen</span><span class="s2">(</span>
+                                              <span class="s0">roomName</span><span class="s2">: </span><span class="s1">&quot;patient_</span><span class="s2">${</span><span class="s0">patient</span><span class="s2">.</span><span class="s0">name</span><span class="s2">.</span><span class="s0">replaceAll</span><span class="s2">(</span><span class="s1">' '</span><span class="s2">, </span><span class="s1">'_'</span><span class="s2">)}</span><span class="s1">&quot;</span><span class="s2">,</span>
+                                              <span class="s0">patientName</span><span class="s2">: </span><span class="s0">patient</span><span class="s2">.</span><span class="s0">name</span><span class="s2">,</span>
+                                            <span class="s2">),</span>
+                                          <span class="s2">),</span>
+                                        <span class="s2">);</span>
+                                      <span class="s2">},</span>
+                                      <span class="s0">child</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Call'</span><span class="s2">),</span>
+                                    <span class="s2">),</span>
+                                    <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                                      <span class="s0">onPressed</span><span class="s2">: () {</span>
+                                        <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                                            <span class="s0">context</span><span class="s2">, </span><span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">MessageScreen</span><span class="s2">()));</span>
+                                      <span class="s2">},</span>
+                                      <span class="s0">child</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Message'</span><span class="s2">),</span>
+                                    <span class="s2">),</span>
+                                  <span class="s2">],</span>
+                                <span class="s2">),</span>
+                              <span class="s2">],</span>
+                            <span class="s2">),</span>
+                          <span class="s2">),</span>
+                        <span class="s2">);</span>
+                      <span class="s2">},</span>
+                    <span class="s2">),</span>
+                  <span class="s2">),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+        <span class="s2">],</span>
+      <span class="s2">),</span>
+
+      <span class="s0">floatingActionButton</span><span class="s2">: </span><span class="s0">SizedBox</span><span class="s2">(</span>
+        <span class="s0">width</span><span class="s2">: </span><span class="s5">100</span><span class="s2">,</span>
+        <span class="s0">height</span><span class="s2">: </span><span class="s5">100</span><span class="s2">,</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">FloatingActionButton</span><span class="s2">(</span>
+          <span class="s0">onPressed</span><span class="s2">: () {</span>
+            <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span><span class="s0">context</span><span class="s2">, </span><span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s4">const </span><span class="s0">AskAIScreen</span><span class="s2">()));</span>
+          <span class="s2">},</span>
+          <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">indigo</span><span class="s2">,</span>
+          <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+          <span class="s0">shape</span><span class="s2">: </span><span class="s4">const </span><span class="s0">CircleBorder</span><span class="s2">(),</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s4">const </span><span class="s0">Text</span><span class="s2">(</span>
+            <span class="s1">'Ask AI'</span><span class="s2">,</span>
+            <span class="s0">textAlign</span><span class="s2">: </span><span class="s0">TextAlign</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+            <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontWeight</span><span class="s2">: </span><span class="s0">FontWeight</span><span class="s2">.</span><span class="s0">bold</span><span class="s2">, </span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">18</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

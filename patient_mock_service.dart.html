@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>patient_mock_service.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #cf8e6d;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+patient_mock_service.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'patient_model.dart'</span><span class="s2">;</span>
+
+<span class="s0">Future</span><span class="s2">&lt;</span><span class="s0">List</span><span class="s2">&lt;</span><span class="s0">Patient</span><span class="s2">&gt;&gt; </span><span class="s0">fetchPatientsForCaregiver</span><span class="s2">(</span><span class="s0">String caregiverEmail</span><span class="s2">) </span><span class="s0">async </span><span class="s2">{</span>
+  <span class="s0">await Future</span><span class="s2">.</span><span class="s0">delayed</span><span class="s2">(</span><span class="s0">Duration</span><span class="s2">(</span><span class="s0">seconds</span><span class="s2">: </span><span class="s3">1</span><span class="s2">)); </span><span class="s4">// Simulate network delay</span>
+
+  <span class="s4">//return [];</span>
+<span class="s4">// }</span>
+
+  <span class="s4">// Fake filter: return only if email matches // this needs to be connect with backend actual API to fetch actual data</span>
+  <span class="s5">if </span><span class="s2">(</span><span class="s0">caregiverEmail </span><span class="s2">== </span><span class="s1">'bartsimpson@example.com'</span><span class="s2">) {</span>
+    <span class="s5">return </span><span class="s2">[</span>
+      <span class="s0">Patient</span><span class="s2">(</span><span class="s0">name</span><span class="s2">: </span><span class="s1">'Homer Simpson'</span><span class="s2">, </span><span class="s0">age</span><span class="s2">: </span><span class="s3">85</span><span class="s2">, </span><span class="s0">lastInteraction</span><span class="s2">: </span><span class="s1">'10 mins ago'</span><span class="s2">),</span>
+      <span class="s0">Patient</span><span class="s2">(</span><span class="s0">name</span><span class="s2">: </span><span class="s1">'Marge Simpson'</span><span class="s2">, </span><span class="s0">age</span><span class="s2">: </span><span class="s3">83</span><span class="s2">, </span><span class="s0">lastInteraction</span><span class="s2">: </span><span class="s1">'30 mins ago'</span><span class="s2">),</span>
+      <span class="s0">Patient</span><span class="s2">(</span><span class="s0">name</span><span class="s2">: </span><span class="s1">'Bart Simpson'</span><span class="s2">, </span><span class="s0">age</span><span class="s2">: </span><span class="s3">81</span><span class="s2">, </span><span class="s0">lastInteraction</span><span class="s2">: </span><span class="s1">'20 mins ago'</span><span class="s2">),</span>
+    <span class="s2">];</span>
+  <span class="s2">} </span><span class="s5">else </span><span class="s2">{</span>
+    <span class="s5">return </span><span class="s2">[]; </span><span class="s4">// No patients assigned to this caregiver</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+
+</pre>
+</body>
+</html>
