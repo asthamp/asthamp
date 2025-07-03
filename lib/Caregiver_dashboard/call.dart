@@ -1,92 +1,3 @@
-/*
-//This code is for only video/call
-//Does not inlcude the  emotion detection
-import 'package:flutter/material.dart';
-import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-class CallScreen extends StatefulWidget {
-  final String patientName;
-
-  const CallScreen({super.key, required this.patientName, required String roomName});
-
-  @override
-  State<CallScreen> createState() => _CallScreenState();
-}
-
-class _CallScreenState extends State<CallScreen> {
-  final JitsiMeet jitsiMeet = JitsiMeet();
-  late String roomName;
-
-  @override
-  void initState() {
-    super.initState();
-    roomName = "careconnect_${widget.patientName.replaceAll(' ', '_')}";
-    _startMeeting();
-  }
-
-  Future<void> _startMeeting() async {
-    await [Permission.camera, Permission.microphone].request();
-
-    if (!(await Permission.camera.isGranted && await Permission.microphone.isGranted)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Permissions required")),
-      );
-      Navigator.pop(context);
-      return;
-    }
-
-    final options = JitsiMeetConferenceOptions(
-      room: roomName,
-      serverURL: "https://meet.jit.si",
-      userInfo: JitsiMeetUserInfo(displayName: "Caregiver"),
-      configOverrides: {
-        "startWithAudioMuted": false,
-        "startWithVideoMuted": false,
-      },
-      featureFlags: {
-        "welcomepage.enabled": false,
-        "call-integration.enabled": false,
-        "pip.enabled": false,
-      },
-    );
-
-    await jitsiMeet.join(options);
-  }
-
-  @override
-  void dispose() {
-    jitsiMeet.hangUp();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Calling ${widget.patientName}"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.call_end, color: Colors.red),
-            onPressed: () {
-              jitsiMeet.hangUp();
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Text("Connecting to video call...", style: TextStyle(fontSize: 18)),
-      ),
-    );
-  }
-}
-
-
-*/
-
-
-
 
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
@@ -95,11 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CallScreen extends StatefulWidget {
   final String patientName;
+  final bool isCaller; // true if caregiver, false if patient
 
-  const CallScreen({super.key, required this.patientName, required String roomName});
+  const CallScreen({
+    super.key,
+    required this.patientName,
+    this.isCaller = false, required String roomName,
+  });
 
   @override
   State<CallScreen> createState() => _CallScreenState();
@@ -113,14 +30,44 @@ class _CallScreenState extends State<CallScreen> {
   bool _isDetecting = false;
 
   String emotionLabel = "Detecting...";
-  String faceStatus = ""; // emoji face
+  String faceStatus = "";
 
   @override
   void initState() {
     super.initState();
     roomName = "careconnect_${widget.patientName.replaceAll(' ', '_')}";
-    _startMeeting();
+
+    if (widget.isCaller) {
+      _triggerCallInFirestore();
+      _startMeeting();
+    } else {
+      _listenForIncomingCall();
+    }
+
     Future.delayed(const Duration(seconds: 2), _initializeEmotionDetection);
+  }
+
+  Future<void> _triggerCallInFirestore() async {
+    await FirebaseFirestore.instance
+        .collection("calls")
+        .doc(widget.patientName.replaceAll(' ', '_'))
+        .set({
+      "roomName": roomName,
+      "isActive": true,
+      "timestamp": FieldValue.serverTimestamp(),
+    });
+  }
+
+  void _listenForIncomingCall() {
+    final docRef = FirebaseFirestore.instance
+        .collection("calls")
+        .doc(widget.patientName.replaceAll(' ', '_'));
+
+    docRef.snapshots().listen((doc) {
+      if (doc.exists && doc['isActive'] == true) {
+        _startMeeting();
+      }
+    });
   }
 
   Future<void> _startMeeting() async {
@@ -129,10 +76,10 @@ class _CallScreenState extends State<CallScreen> {
     final options = JitsiMeetConferenceOptions(
       room: roomName,
       serverURL: "https://meet.jit.si",
-      userInfo: JitsiMeetUserInfo(displayName: "Caregiver"),
+      userInfo: JitsiMeetUserInfo(displayName: widget.isCaller ? "Caregiver" : "Patient"),
       configOverrides: {
         "startWithAudioMuted": false,
-        "startWithVideoMuted": true, // disables video for emotion detection
+        "startWithVideoMuted": false,
       },
       featureFlags: {
         "welcomepage.enabled": false,
@@ -159,7 +106,7 @@ class _CallScreenState extends State<CallScreen> {
     );
 
     await _cameraController!.initialize();
-    await Future.delayed(const Duration(seconds: 1)); // let camera settle
+    await Future.delayed(const Duration(seconds: 1));
     await _cameraController!.startImageStream(_analyzeFrame);
 
     _faceDetector = GoogleMlKit.vision.faceDetector(
@@ -169,8 +116,7 @@ class _CallScreenState extends State<CallScreen> {
       ),
     );
 
-
-    setState(() {}); // refresh UI
+    setState(() {});
   }
 
   Future<void> _analyzeFrame(CameraImage image) async {
@@ -230,11 +176,19 @@ class _CallScreenState extends State<CallScreen> {
     }
   }
 
+  Future<void> _endCall() async {
+    await FirebaseFirestore.instance
+        .collection("calls")
+        .doc(widget.patientName.replaceAll(' ', '_'))
+        .update({"isActive": false});
+    jitsiMeet.hangUp();
+  }
+
   @override
   void dispose() {
     _cameraController?.dispose();
     _faceDetector?.close();
-    jitsiMeet.hangUp();
+    _endCall();
     super.dispose();
   }
 
@@ -244,12 +198,13 @@ class _CallScreenState extends State<CallScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Calling ${widget.patientName}"),
+        title: Text(widget.isCaller
+            ? "Calling ${widget.patientName}"
+            : "Receiving Call from Caregiver"),
         actions: [
           IconButton(
             icon: const Icon(Icons.call_end, color: Colors.red),
             onPressed: () {
-              jitsiMeet.hangUp();
               Navigator.pop(context);
             },
           ),
@@ -264,7 +219,6 @@ class _CallScreenState extends State<CallScreen> {
             )
           else
             const Center(child: CircularProgressIndicator()),
-
           Positioned(
             top: 20,
             right: 20,
